@@ -1,4 +1,59 @@
-export function valida(input) {
+export function valida() {
+  const tipoDeInput = input.dataSet.tipo;
+  if(validadores[tipoDeInput]){
+    validadores[tipoDeInput](input);
+  }
+
+  if (input.validity.valid) {
+    input.parentElement.classList.remove("input-container--invalid");
+  }else{
+    input.parentElement.classList.add("input-container--invalid");
+  }
+}
+
+const mensajesDeError = {
+  nombre: {
+    valueMissing: "este campo no puede estar vacio",
+  },
+  email: {
+    valueMissing: "este campo no puede estar vacio",
+    typeMismatch: "el correo no es valido", 
+  },
+  password: {
+    valueMissing: "este campo no puede estar vacio",
+    patterMismatch:"Al menos 6 caracteres, máximo 12, debe contener una letra minúscula, una letra mayúscula, un número y no puede contener caracteres especiales.",
+  },
+  nacimiento: {
+    valueMissing: "este campo no puede estar vacio",
+    customError: "debes tener al menos 18 años de edad",
+  }
+}
+
+const validadores = {
+  nacimiento: (input) => validarNacimiento(input),
+};
+
+function validarNacimiento(input){
+  const fechaCliente = new date (input.value);
+  let mensaje = ""
+  if (!mayorDeEdad(fechaCliente)){
+    mensaje = "debes tener al menos 18 años de edad";
+  };
+
+  input.setCustomValidity(mensaje)
+}
+
+function mayorDeEdad(fecha){
+  const fechaActual = new date();
+  const diferenciaFechas = new date(
+    fecha.getUTCFullYear() + 18,
+    fecha.getUTCFullMonth(),
+    fecha.getUTCDate()
+  );
+  return diferenciaFechas <= fechaActual;
+}
+
+/*export function valida(input) {
   const tipoDeInput = input.dataset.tipo;
   if (validadores[tipoDeInput]) {
     validadores[tipoDeInput](input);
@@ -91,4 +146,4 @@ function mayorDeEdad(fecha) {
     fecha.getUTCDate()
   );
   return diferenciaFechas <= fechaActual;
-}
+}*/
