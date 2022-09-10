@@ -1,30 +1,41 @@
-export function valida() {
-  const tipoDeInput = input.dataSet.tipo;
+export function valida(input) {
+  const tipoDeInput = input.dataset.tipo;
   if(validadores[tipoDeInput]){
     validadores[tipoDeInput](input);
   }
 
   if (input.validity.valid) {
     input.parentElement.classList.remove("input-container--invalid");
+    input.parentElement.querySelector(".input-message-error").innerHTML = "";
   }else{
     input.parentElement.classList.add("input-container--invalid");
+    input.parentElement.querySelector(".input-message-error").innerHTML =
+    mostrarMensajeDeError(tipoDeInput, input);
   }
 }
 
+
+const tipoDeErrores = [
+  "valueMissing",
+  "typeMismatch",
+  "patterMismatch",
+  "customError",
+];
+
 const mensajesDeError = {
   nombre: {
-    valueMissing: "este campo no puede estar vacio",
+    valueMissing: "el campo nombre no puede estar vacio",
   },
   email: {
-    valueMissing: "este campo no puede estar vacio",
+    valueMissing: "el campo email puede estar vacio",
     typeMismatch: "el correo no es valido", 
   },
   password: {
-    valueMissing: "este campo no puede estar vacio",
+    valueMissing: "el campo cotraseña no puede estar vacio",
     patterMismatch:"Al menos 6 caracteres, máximo 12, debe contener una letra minúscula, una letra mayúscula, un número y no puede contener caracteres especiales.",
   },
   nacimiento: {
-    valueMissing: "este campo no puede estar vacio",
+    valueMissing: "el campo nacimientono puede estar vacio",
     customError: "debes tener al menos 18 años de edad",
   }
 }
@@ -32,6 +43,18 @@ const mensajesDeError = {
 const validadores = {
   nacimiento: (input) => validarNacimiento(input),
 };
+
+function mostrarMensajeDeError(tipoDeInput, input) {
+  let mensaje = ""
+  tipoDeErrores.forEach((error) => {
+    if (input.validity[error]) {
+      console.log(tipoDeInput, error);
+      console.log(input.validity[error]);
+      console.log(mensajesDeError[tipoDeImput][error]);
+    }
+  });
+  return mensaje;
+}
 
 function validarNacimiento(input){
   const fechaCliente = new date (input.value);
